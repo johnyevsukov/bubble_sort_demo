@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+
+import os
+import random
+import time
+import turtle
+
+
+Y_COORDINATE_BASELINE = 490
+
+# Number of pixels per shape size unit
+SHAPE_SIZE_MULTIPLIER = 20
+
+SORT_SIZE = 50
+
+PARENT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+
+
+'''
+TODO:
+
+    - We need to add CLI parameters too to swap algorithms and adjust array size 
+        - read the argparse docs
+        - we should be able to call the script like:
+            `./shape-test.py --elements 50`
+
+    - abstract the code in the while loop to methods
+
+    - add debug code to paint numbers on the array elements
+        - it should be as simple as possible so as to decrease the likelihood there'll be a bug in it
+            - it would suck to have a bug in the code you use to spot bugs
+
+
+DONE-ish:
+
+    - the width of the bars should scale to fill the screen
+    
+    - highlight the element that's moving
+
+    - Implement swapping
+        - You should make a custom array class that inherits from list
+        - Then give it a method called swap
+        - It takes 2 indexes as args
+        - And it does the set x and screen.update
+    
+
+'''
+# score = 1
+
+turtle.register_shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
+turtle.register_shape(os.path.join(PARENT_DIRECTORY, "mario_two.gif"))
+
+screen = turtle.Screen()
+screen.tracer(0)
+screen.bgcolor("blue")
+screen.title("Bubble Sort")
+
+score_pen = turtle.Turtle()
+score_pen.speed(0)
+score_pen.color("white")
+score_pen.penup()
+score_pen.setposition(-550, 350)
+
+mario = turtle.Turtle()
+mario.speed(0)
+mario.shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
+mario.penup()
+mario.setposition(-500,470)
+
+def is_sorted(_array):
+    for index, element in enumerate(_array):
+        if index == 0:
+            continue
+        if _array[index - 1].value > _array[index].value:
+            return False
+    return True
+
+
+class SortElement(turtle.Turtle):
+    def __init__(self, value, *args, **kwargs):
+        self.value = value
+        super().__init__(*args, **kwargs)
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} {self.value}>"
+
+    def __repr__(self):
+        return str(self)
+
+class SortElements(list):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def swap(self, index, other_index):
+
+        # # These 4 lines ...
+        # current_element = self[index]
+        # next_element = self[other_index]
+        # self[index] = next_element
+        # self[other_index] = current_element
+
+        # ...are equivalent to this 1 line:
+        self[index], self[other_index] = self[other_index], self[index]
+
+        turtle.color("#FF0000")
+        screen.update()
+        # os.system(f"afplay {os.path.join(PARENT_DIRECTORY, 'bubble.wav')}&")
+
+        # # Swap the elements
+        # import ipdb; ipdb.set_trace()
+        # pass
+
+
+
+
+def get_turtles():
+    xc = -570
+    colors = ["pink", "red", "white", "black", "green", "brown", "lightblue", "lightgreen", "orange", "purple", "gray"]
+
+    # Instead of a list, this should be a custom class that inherits from list.
+    # The custom class should have a swap mathod that takes inexes and does the swap plus the color change effect.
+    turtles = SortElements()
+
+    for _ in range(SORT_SIZE):
+        turtle = SortElement(random.randint(1, 40))
+        random.shuffle(colors)
+        # turtle.color(colors.pop())
+        turtle.color("#66ff33")
+        turtle.shapesize(turtle.value, 1)
+        turtle.shape("square")
+        turtle.penup()
+        turtle.pensize(18)
+        turtle.setx(xc)
+        # turtle.lt(90)
+        xc += 35
+        turtles.append(turtle)
+    return turtles
+
+
+def set_size(turtles):
+    for turtle in turtles:
+        # At 32 turtles, 1 looks like the right size.
+        width = 32 / len(turtles)
+        turtle.shapesize(turtle.value, width)
+
+
+def align_bottom(turtles):
+    for turtle in turtles:
+        print(f"Element: {turtle.value}")
+
+        ## Bug - should've offset from the baseline
+        # # Take half the height of the max column
+        # y_value = max(TURTLES) / 2
+        # print(f"Y: {y_value}")
+
+        y_value = Y_COORDINATE_BASELINE
+        
+        # Offset based on shape size
+        y_value -= turtle.value / 2 * SHAPE_SIZE_MULTIPLIER
+        print(f"Y: {y_value}")
+
+        # Go from the top coordinate of the screen to the bottom
+        y_value *= -1
+        print(f"Y: {y_value}")
+
+        ## Bug - should've offset by the number of pixels represented by each shape size unit
+        # # Exagerate the Turtle spacing
+        # y_value *= 25
+        # print(f"Y: {y_value}")
+
+        turtle.sety(y_value)
+
+        # turtle.sety(y_value)
+        print(f"Y: {y_value}")
+        print()
+
+
+TURTLES = get_turtles()
+
+while True:
+
+    if is_sorted(TURTLES):
+        screen.update()
+        continue
+
+    for outer_index, _ in enumerate(TURTLES):
+        os.system(f"afplay {os.path.join(PARENT_DIRECTORY, 'bubble.wav')}&")
+        
+        mario.shape(os.path.join(PARENT_DIRECTORY, "mario_two.gif"))
+        score_pen.clear()
+        scorestring = ', '.join([str(turtle.value) for turtle in TURTLES])
+        score_pen.write(scorestring, False, align="left", font=("Arial", 15, "normal"))
+        score_pen.hideturtle()
+        print(f"We're on loop {outer_index + 1} {'*' * 80}")
+        x_coordinate = -570
+        for turtle in TURTLES:
+            turtle.setx(x_coordinate)
+
+            # The 1120 is arbitrary. At 32 turtles, 35 lookedd like the right spaceing.
+            # For x / 32 = 35 -> x = 1120
+            x_coordinate += 1120 / len(TURTLES)
+
+
+        set_size(TURTLES)
+        align_bottom(TURTLES)
+
+        screen.update()
+        time.sleep(.05)
+
+        # https://stackoverflow.com/a/522578
+        for index, turtle in enumerate(TURTLES[:]):
+            mario.shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
+
+            # Protect against index error at end of list.
+            if index + 1 <= len(TURTLES) - 1:
+
+                if TURTLES[index].value > TURTLES[index + 1].value:
+                    TURTLES.swap(index, index + 1)
+
+            for turtle in TURTLES:
+                turtle.color("#66ff33")

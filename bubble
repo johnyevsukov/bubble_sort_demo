@@ -47,8 +47,8 @@ DONE-ish:
 """
 # score = 1
 
-turtle.register_shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
-turtle.register_shape(os.path.join(PARENT_DIRECTORY, "mario_two.gif"))
+turtle.register_shape(os.path.join(PARENT_DIRECTORY, "assets/sprites/mario_one.gif"))
+turtle.register_shape(os.path.join(PARENT_DIRECTORY, "assets/sprites/mario_two.gif"))
 
 screen = turtle.Screen()
 screen.tracer(0)
@@ -63,7 +63,7 @@ score_pen.setposition(-550, 350)
 
 mario = turtle.Turtle()
 mario.speed(0)
-mario.shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
+mario.shape(os.path.join(PARENT_DIRECTORY, "assets/sprites/mario_one.gif"))
 mario.penup()
 mario.setposition(-500, 470)
 
@@ -106,7 +106,7 @@ class SortElements(list):
 
         turtle.color("#FF0000")
         screen.update()
-        # os.system(f"afplay {os.path.join(PARENT_DIRECTORY, 'bubble.wav')}&")
+        # os.system(f"afplay {os.path.join(PARENT_DIRECTORY, 'assets/sounds/bubble.wav')}&")
 
         # # Swap the elements
         # import ipdb; ipdb.set_trace()
@@ -196,9 +196,9 @@ while True:
         continue
 
     for outer_index, _ in enumerate(TURTLES):
-        os.system(f"afplay {os.path.join(PARENT_DIRECTORY, 'bubble.wav')}&")
+        os.system(f"afplay {os.path.join(PARENT_DIRECTORY, 'assets/sounds/bubble.wav')}&")
 
-        mario.shape(os.path.join(PARENT_DIRECTORY, "mario_two.gif"))
+        mario.shape(os.path.join(PARENT_DIRECTORY, "assets/sprites/mario_two.gif"))
         score_pen.clear()
         scorestring = ", ".join([str(turtle.value) for turtle in TURTLES])
         score_pen.write(scorestring, False, align="left", font=("Arial", 15, "normal"))
@@ -220,7 +220,7 @@ while True:
 
         # https://stackoverflow.com/a/522578
         for index, turtle in enumerate(TURTLES[:]):
-            mario.shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
+            mario.shape(os.path.join(PARENT_DIRECTORY, "assets/sprites/mario_one.gif"))
 
             # Protect against index error at end of list.
             if index + 1 <= len(TURTLES) - 1:

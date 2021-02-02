@@ -16,7 +16,7 @@ SORT_SIZE = 50
 PARENT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 
-'''
+"""
 TODO:
 
     - We need to add CLI parameters too to swap algorithms and adjust array size 
@@ -44,7 +44,7 @@ DONE-ish:
         - And it does the set x and screen.update
     
 
-'''
+"""
 # score = 1
 
 turtle.register_shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
@@ -65,7 +65,8 @@ mario = turtle.Turtle()
 mario.speed(0)
 mario.shape(os.path.join(PARENT_DIRECTORY, "mario_one.gif"))
 mario.penup()
-mario.setposition(-500,470)
+mario.setposition(-500, 470)
+
 
 def is_sorted(_array):
     for index, element in enumerate(_array):
@@ -86,6 +87,7 @@ class SortElement(turtle.Turtle):
 
     def __repr__(self):
         return str(self)
+
 
 class SortElements(list):
     def __init__(self, *args, **kwargs):
@@ -111,11 +113,21 @@ class SortElements(list):
         # pass
 
 
-
-
 def get_turtles():
     xc = -570
-    colors = ["pink", "red", "white", "black", "green", "brown", "lightblue", "lightgreen", "orange", "purple", "gray"]
+    colors = [
+        "pink",
+        "red",
+        "white",
+        "black",
+        "green",
+        "brown",
+        "lightblue",
+        "lightgreen",
+        "orange",
+        "purple",
+        "gray",
+    ]
 
     # Instead of a list, this should be a custom class that inherits from list.
     # The custom class should have a swap mathod that takes inexes and does the swap plus the color change effect.
@@ -154,7 +166,7 @@ def align_bottom(turtles):
         # print(f"Y: {y_value}")
 
         y_value = Y_COORDINATE_BASELINE
-        
+
         # Offset based on shape size
         y_value -= turtle.value / 2 * SHAPE_SIZE_MULTIPLIER
         print(f"Y: {y_value}")
@@ -185,10 +197,10 @@ while True:
 
     for outer_index, _ in enumerate(TURTLES):
         os.system(f"afplay {os.path.join(PARENT_DIRECTORY, 'bubble.wav')}&")
-        
+
         mario.shape(os.path.join(PARENT_DIRECTORY, "mario_two.gif"))
         score_pen.clear()
-        scorestring = ', '.join([str(turtle.value) for turtle in TURTLES])
+        scorestring = ", ".join([str(turtle.value) for turtle in TURTLES])
         score_pen.write(scorestring, False, align="left", font=("Arial", 15, "normal"))
         score_pen.hideturtle()
         print(f"We're on loop {outer_index + 1} {'*' * 80}")
@@ -200,12 +212,11 @@ while True:
             # For x / 32 = 35 -> x = 1120
             x_coordinate += 1120 / len(TURTLES)
 
-
         set_size(TURTLES)
         align_bottom(TURTLES)
 
         screen.update()
-        time.sleep(.05)
+        time.sleep(0.05)
 
         # https://stackoverflow.com/a/522578
         for index, turtle in enumerate(TURTLES[:]):
